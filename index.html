@@ -19,14 +19,11 @@
   <!-- My Style -->
   <link rel="stylesheet" href="css/style.css">
 
-
-  <!-- App -->
-  <script src="js/app.js"></script>
-
-
   <!-- Alpine JS -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+  
+  <!-- App -->
+  <script src="js/app.js" async></script>
 </head>
 
 <body>
@@ -79,7 +76,10 @@
       <h4 x-show="$store.cart.items.length">Total : <span x-text="rupiah($store.cart.total)"></spanx-text></h4>
       <div class="form-container" x-show="$store.cart.items.length">
         <form action="" id="checkoutForm">
+          <input type="hidden" name="items" x-model="JSON.stringify($store.cart.items)">
+          <input type="hidden" name="total" x-model="$store.cart.total">
           <h5>Customer Detail</h5>
+
           <label for="name">
             <span>Name</span>
             <input type="text" name="name" id="name">
@@ -95,7 +95,7 @@
             <input type="number" name="phone" id="name" autocomplete="off">
           </label>
 
-          <button class="checkout-button" type="submit" id="checkout-button">Checkout</button>
+          <button class="checkout-button disabled" type="submit" id="checkout-button">Checkout</button>
         </form>
       </div>
     </div>

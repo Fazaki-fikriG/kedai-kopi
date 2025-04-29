@@ -50,13 +50,47 @@ document.addEventListener("alpine:init", () => {
           }
         })
       } else if (cartItem.quantity === 1) {
-        this.items = thia.items.filter((item) => item.id !== id)
+        this.items = this.items.filter((item) => item.id !== id)
         this.quantity--;
         this.total -= cartItem.price;
       }
     }
   });
 });
+
+const checkoutButton = document.querySelector('.checkout-button');
+const form = document.querySelector('#checkoutForm');
+
+form.addEventListener('keyup', () => {
+  const inputs = form.querySelectorAll('input');
+  const allFilled = [...inputs].every(input => input.value.trim() !== '');
+
+  checkoutButton.disabled = !allFilled;
+  checkoutButton.classList.toggle('disabled', !allFilled);
+});
+
+// Send Data While Checkout
+checkoutButton.addEventListener('click', function (e) {
+  e.preventDefault()
+  const formData = new FormData(form)
+  const data = new URLSearchParams(formData)
+  const objData = Object.fromEntries(data)
+  const message = formatMessage(objData)
+  window.open('http://wa.me/+62895701615080?text=' + encodeURIComponent(message))
+})
+
+// Whatsapp Message Format
+const formatMessage = (obj) => {
+  return `Data Customer
+    Nama: ${obj.name}
+    Email: ${obj.email}
+    No HP: ${obj.phone}
+  Data Pesanan
+  ${JSON.parse(obj.items).map((item) => `${item.name} (${item.quantity} x ${rupiah(item.total)}) \n`)}
+  TOTAL: ${rupiah(obj.total)}
+  Terima Kasih.
+  `
+}
 
 // Convert Ke Rupiah
 const rupiah = (number) => {
